@@ -1,29 +1,50 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 // We compile using Java 7.
 sourceCompatibility = 1.7
 
+version = '0.67'
+group = 'org.ggp.base'
 /*
  * For now, instead of using an online library repository (e.g. Maven), we keep
  * local versions of .jars to reduce the number of things that can go wrong
  * during setup.
  */
+repositories {
+    mavenCentral()
+}
+
+
 dependencies {
-    compile files(
-        'lib/Guava/guava-14.0.1.jar',
-        'lib/Jython/jython.jar',
-        'lib/Clojure/clojure.jar',
-        'lib/Batik/batik-1.7.jar',
-        'lib/FlyingSaucer/core-renderer.jar',
-        'lib/javassist/javassist.jar',
-        'lib/reflections/reflections-0.9.9-RC1.jar',
-        'lib/Htmlparser/htmlparser-1.4.jar',
-    )
-    testCompile files(
-        'lib/JUnit/junit-4.11.jar',
-        'lib/JUnit/hamcrest-core-1.3.jar',
-    )
+    compile 'com.google.guava:guava:14.0.1',
+            'org.python:jython:2.7-b1',
+            'org.clojure:clojure:1.5.1',
+             'org.apache.xmlgraphics:batik-svg-dom:1.7',
+            'org.apache.xmlgraphics:batik-transcoder:1.7',
+            'org.xhtmlrenderer:flying-saucer-core:9.0.7',
+            'org.javassist:javassist:3.19.0-GA',
+            'org.reflections:reflections:0.9.9',
+            'nu.validator.htmlparser:htmlparser:1.4'
+
+
+
+//    compile files(
+//        'lib/Guava/guava-14.0.1.jar',
+//        'lib/Clojure/clojure.jar',
+//        'lib/Batik/batik-1.7.jar',
+//        'lib/FlyingSaucer/core-renderer.jar',
+//        'lib/javassist/javassist.jar',
+//        'lib/reflections/reflections-0.9.9-RC1.jar',
+//        'lib/Htmlparser/htmlparser-1.4.jar',
+//    )
+//    testCompile files(
+//        'lib/JUnit/junit-4.11.jar',
+//        'lib/JUnit/hamcrest-core-1.3.jar',
+//    )
+    testCompile 'junit:junit-dep:4.11'
+
 }
 
 /*
@@ -155,3 +176,50 @@ task gameServerRunner(type: JavaExec) {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.1'
 }
+
+ task sourcesJar(type: Jar) {
+        from sourceSets.main.java
+        classifier "sources"
+    }
+
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+repositories {
+    // NOTE: Pin repository path to project since it will always exist,
+    //       but change patterns
+    flatDir name: 'localRepository', dirs: '/Users/mark/tmp'
+
+////    localRepository {
+////        def patterns = [repoPath + '[module](-[revision])(-[classifier]).[ext]']
+////        setArtifactPatterns(patterns)
+////    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact(sourcesJar) {
+                classifier "sources"
+            }
+            artifact(javadocJar) {
+                classifier "javadoc"
+            }
+        }
+    }
+    repositories { mavenLocal() }
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+//uploadArchives {
+//    repositories { ivy { url "file://Users/mark/tmp/ivy" } }
+//}
