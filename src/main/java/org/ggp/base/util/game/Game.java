@@ -106,7 +106,7 @@ public final class Game {
      * before they're stored in Game objects or sent over the network as part
      * of a START request.
      *
-     * @param raw rulesheet
+     * @param rawRulesheet  raw rulesheet
      * @return processed rulesheet
      */
     public static String preprocessRulesheet(String rawRulesheet) {

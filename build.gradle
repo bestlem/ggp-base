@@ -155,3 +155,20 @@ task gameServerRunner(type: JavaExec) {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.1'
 }
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.java
+    classifier "sources"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    javadoc.failOnError = false
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}

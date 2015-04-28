@@ -39,7 +39,7 @@ import org.ggp.base.util.prover.aima.unifier.Unifier;
  *
  * To use this class:
  *      PropNetAnnotatedFlattener AF = new PropNetAnnotatedFlattener(description);
- *      List<GdlRule> flatDescription = AF.flatten();
+ *      List&lt;GdlRule&gt; flatDescription = AF.flatten();
  *      return converter.convert(flatDescription);
  */
 public final class PropNetAnnotatedFlattener
@@ -67,8 +67,6 @@ public final class PropNetAnnotatedFlattener
      * records the result.</li>
      * </ol>
      *
-     * @param description
-     *            A game description.
      * @return An equivalent description, without variables.
      */
     public List<GdlRule> flatten()

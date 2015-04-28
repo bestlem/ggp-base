@@ -51,17 +51,17 @@ import com.google.common.collect.Sets;
  * rules in a way that results in smaller propnets. For example, we may
  * have a rule as follows:
  *
- * (<= (foo ?x ?y)
+ * (&lt;= (foo ?x ?y)
  *     (bar ?x ?y)
  *     (baz ?y ?z))
  *
  * In the propnet, this will result in one AND node for each combination
  * of ?x, ?y, and ?z. The CondensationIsolator would split it up as follows:
  *
- * (<= (foo ?x ?y)
+ * (&lt;= (foo ?x ?y)
  *     (bar ?x ?y)
  *     (baz_tmp0 ?y))
- * (<= (baz_tmp0 ?y)
+ * (&lt;= (baz_tmp0 ?y)
  *     (baz ?y ?z))
  *
  * In the propnet, there will now be one AND node for each combination of
