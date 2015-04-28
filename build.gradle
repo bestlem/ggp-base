@@ -1,14 +1,22 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 // We compile using Java 7.
 sourceCompatibility = 1.7
 
+version = '1.0-SNAPSHOT'
+group = 'org.ggp.base'
 /*
  * For now, instead of using an online library repository (e.g. Maven), we keep
  * local versions of .jars to reduce the number of things that can go wrong
  * during setup.
  */
+repositories {
+    mavenCentral()
+}
+
+
 dependencies {
     compile files(
         'lib/Guava/guava-14.0.1.jar',
@@ -24,6 +32,15 @@ dependencies {
         'lib/JUnit/junit-4.11.jar',
         'lib/JUnit/hamcrest-core-1.3.jar',
     )
+}
+
+// Copy all dependencies into the  jar
+jar {
+     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
 }
 
 /*
@@ -153,7 +170,7 @@ task gameServerRunner(type: JavaExec) {
 
 // This was used to generate the Gradle wrapper.
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.3'
 }
 
 task sourcesJar(type: Jar) {
@@ -165,6 +182,22 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     javadoc.failOnError = false
     classifier = 'javadoc'
     from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact(sourcesJar) {
+                classifier "sources"
+            }
+            artifact(javadocJar) {
+                classifier "javadoc"
+            }
+        }
+    }
+    repositories { mavenLocal() }
 }
 
 artifacts {
