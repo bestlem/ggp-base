@@ -10,7 +10,7 @@ import java.io.PrintStream;
 
 public class FileUtils {
     /**
-     * @param filePath the name of the file to open.
+     * @param file the name of the file to open.
      */
     public static String readFileAsString(File file) {
         try {

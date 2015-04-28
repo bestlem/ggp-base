@@ -33,7 +33,7 @@ import org.ggp.base.util.logging.GamerLogger;
  *
  * To use this class:
  *      PropNetFlattener PF = new PropNetFlattener(description);
- *      List<GdlRule> flatDescription = PF.flatten();
+ *      List&lt;GdlRule&gt; flatDescription = PF.flatten();
  *      return converter.convert(flatDescription);
  *
  * @author Ethan Dreyfuss
